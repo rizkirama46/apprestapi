@@ -8,7 +8,19 @@ exports.index = function(req, res) {
 }
 
 exports.tampilMahasiswa = function(req, res){
-  connection.query('SELECT * FROM mahasiswa',  function(error, rows, fields) {
+  connection.query('SELECT * FROM mahasiswa', function(error, rows, fields) {
+    if(error) {
+      console.log(error);
+    } else {
+      respone.ok(rows, res)
+    }
+  })
+}
+
+exports.tampilMahasiswaById = function(req, res){
+  let id = req.params.id
+
+  connection.query('SELECT * FROM mahasiswa WHERE id = ?', [id],  function(error, rows, fields) {
     if(error) {
       console.log(error);
     } else {
