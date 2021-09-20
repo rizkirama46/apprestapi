@@ -70,3 +70,14 @@ exports.hapusMahasiswa = function(req, res){
     }
   })
 }
+
+exports.tampilGroupMatakuliahByIdMahasiswa = function(req, res){
+
+  connection.query(`SELECT mhs.id, mhs.nim, mhs.nama, mhs.jurusan, mk.matakuliah, mk.sks FROM krs krs INNER JOIN matakuliah mk ON krs.id_matakuliah = mk.id INNER JOIN mahasiswa mhs ON krs.id_mahasiswa = mhs.id ORDER BY mhs.id`, function(error, rows, fields) {
+    if(error) {
+      console.log(error);
+    } else {
+      respone.gabungMatakuliahByIdMahasiswa(rows, res)
+    }
+  })
+}
