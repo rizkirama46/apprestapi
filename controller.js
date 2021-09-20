@@ -42,3 +42,19 @@ exports.tambahMahasiswa = function(req, res){
     }
   })
 }
+
+exports.ubahMahasiswa = function(req, res){
+  const id = req.params.id
+
+  const nim = req.body.nim
+  const nama = req.body.nama
+  const jurusan = req.body.jurusan
+
+  connection.query('UPDATE mahasiswa SET nim=?, nama=?, jurusan=? WHERE id=?', [nim, nama, jurusan, +id], function(error, rows, fields) {
+    if(error) {
+      console.log(error);
+    } else {
+      respone.ok('Berhasil Mengubah Data!', res)
+    }
+  })
+}
