@@ -58,3 +58,15 @@ exports.ubahMahasiswa = function(req, res){
     }
   })
 }
+
+exports.hapusMahasiswa = function(req, res){
+  let id = req.params.id
+
+  connection.query('DELETE FROM mahasiswa WHERE id = ?', [id], function(error, rows, fields) {
+    if(error) {
+      console.log(error);
+    } else {
+      respone.ok('Berhasil Menghapus Data', res)
+    }
+  })
+}
