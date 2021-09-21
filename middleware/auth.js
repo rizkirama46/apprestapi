@@ -34,7 +34,7 @@ exports.registrasi = function(req, res) {
           if(error) {
             console.log(error);
           } else {
-            respone.ok('Berhasil Menambahkan Data', res)
+            respone.ok('Berhasil Melakukan Registrasi', res)
           }
         })
       } else {
@@ -96,4 +96,8 @@ exports.login = function(req, res) {
      }
     }
   })
+}
+
+exports.halamanRahasia = function(req, res) {
+  respone.ok('Halaman ini hayan untuk user dengan role = 2!', res)
 }
