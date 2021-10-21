@@ -4,7 +4,7 @@ const config = require('../config/secret')
 function verifikasi(roles) {
   return function(req, rest, next) {
     //cek authorization header
-    const tokenWithBearer = req.header.authorization
+    const tokenWithBearer = req.headers.authorization
     if(tokenWithBearer) {
       const token = tokenWithBearer.split(' ')[1]
       //verifikasi
@@ -12,7 +12,7 @@ function verifikasi(roles) {
         if(err) {
           return rest.status(401).send({auth: false, message: 'Token Tidak Terdaftar!'})
         } else {
-          if(roles == 2) {
+          if(roles == 1) {
             req.auth = rows;
             next()
           } else {

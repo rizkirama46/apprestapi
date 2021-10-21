@@ -109,7 +109,7 @@ exports.halamanRahasia = function(req, res) {
 
 //menampilkan semua mahasiswa
 exports.adminMahasiswa = function(req, res) {
-  connection.query(`SELECT * FROM mahasiswa`, function(error, rows, fields) {
+  connection.query('SELECT * FROM mahasiswa', function(error, rows, fields) {
     if(error) {
       console.log(error)
     } else {
