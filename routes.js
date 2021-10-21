@@ -12,13 +12,13 @@ module.exports = function(app) {
   app.route('/mahasiswa/:id')
   .get(jsonku.tampilMahasiswaById)
 
-  app.route('/mahasiswa')
+  app.route('/tambah')
     .post(jsonku.tambahMahasiswa)
   
-  app.route('/mahasiswa/:id')
+  app.route('/edit')
     .put(jsonku.ubahMahasiswa)
   
-  app.route('/mahasiswa/:id')
+  app.route('/delete')
     .delete(jsonku.hapusMahasiswa)
   
   app.route('/matakuliah')

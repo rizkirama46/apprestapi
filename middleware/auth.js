@@ -68,6 +68,9 @@ exports.login = function(req, res) {
        
         id = rows[0].id
 
+        //1. tambahan row username
+        username = rows[0].username
+
         const data = {
           id_user: id,
           access_token: token,
@@ -87,7 +90,9 @@ exports.login = function(req, res) {
                success: true,
                message: 'Token JWS Tergenerate!',
                token: token,
-               currUser: data.id_user
+               currUser: data.id_user,
+               //2. tambahan user
+               user:username
              });
           }
         })
@@ -100,4 +105,15 @@ exports.login = function(req, res) {
 
 exports.halamanRahasia = function(req, res) {
   respone.ok('Halaman ini hayan untuk user dengan role = 2!', res)
+}
+
+//menampilkan semua mahasiswa
+exports.adminMahasiswa = function(req, res) {
+  connection.query(`SELECT * FROM mahasiswa`, function(error, rows, fields) {
+    if(error) {
+      console.log(error)
+    } else {
+      respone.ok(rows, res)
+    }
+  })
 }

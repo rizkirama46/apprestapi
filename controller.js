@@ -44,8 +44,7 @@ exports.tambahMahasiswa = function(req, res){
 }
 
 exports.ubahMahasiswa = function(req, res){
-  const id = req.params.id
-
+  const id = req.body.id
   const nim = req.body.nim
   const nama = req.body.nama
   const jurusan = req.body.jurusan
@@ -60,7 +59,7 @@ exports.ubahMahasiswa = function(req, res){
 }
 
 exports.hapusMahasiswa = function(req, res){
-  let id = req.params.id
+  let id = req.body.id
 
   connection.query('DELETE FROM mahasiswa WHERE id = ?', [id], function(error, rows, fields) {
     if(error) {
