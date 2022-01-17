@@ -6,6 +6,8 @@ const router = express.Router();
 router.post('/api/v1/register', auth.registrasi);
 router.post('/api/v1/login', auth.login);
 
+router.get('/verify', auth.verifikasi)
+
 //alamat yang perlu otoriasi
 router.get('/api/v1/admin/mahasiswa', verifikasi(1), auth.adminMahasiswa)
 

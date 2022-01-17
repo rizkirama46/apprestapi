@@ -5,7 +5,39 @@ const respone = require('../res')
 const jwt = require('jsonwebtoken')
 const config = require('../config/secret')
 const ip = require('ip')
-const { token } = require('morgan')
+const nodemailer = require('nodemailer')
+
+let smtpTransport = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "rizkiramaworks@gmail.com",
+    pass: "madepwae147"
+  }
+})
+
+let rand, mailOptions, host, link
+
+exports.verifikasi = function(req, res) {
+  console.log(req.protocol);
+  if((req.protocol + '://' + req.get('host')) == ('http://' + host)) {
+    if(req.query.id == rand) {
+      connection.query('UPDATE user SET isVerified=? WHERE email=?', [1, mailOptions.to],
+        function(error, rows, fields) {
+          if(error) {
+            console.log(error);
+          } else {
+            respone.ok("Berhasl merubah data verifikasi", res)
+          }
+        }
+      )
+      res.end("<h1>Email anda " + mailOptions.to + " telah terverifikasi")
+    } else {
+      res.end("<h1>Email anda " + mailOptions.to + " tidak terverifikasi")
+    }
+  }
+}
 
 //controller untuk register
 exports.registrasi = function(req, res) {
@@ -13,8 +45,9 @@ exports.registrasi = function(req, res) {
     username: req.body.username,
     email: req.body.email,
     password: md5(req.body.password),
-    role: +req.body.role,
-    tanggal_daftar: req.body.tanggal_daftar
+    role: 3,
+    tanggal_daftar: new Date(),
+    isVerified: 0
   }
 
   const query = `SELECT email FROM ?? WHERE ??=?`
@@ -34,11 +67,38 @@ exports.registrasi = function(req, res) {
           if(error) {
             console.log(error);
           } else {
-            respone.ok('Berhasil Melakukan Registrasi', res)
+            rand = Math.floor((Math.random() * 100) + 54)
+            host = "localhost:3001"
+            link = "http://" + host + "/auth/verify?id=" + rand
+            mailOptions = {
+              to: post.email,
+              subject: "Verifikasi Email",
+              html: "Hallo, <br> Please klik tautan verifikasi berikut <br>" + 
+              "<a href=" + link + "> Click here to verifikasi </a>"
+            }
+            smtpTransport.sendMail(mailOptions, function(error, respone) {
+              if(error) {
+                 res.json({
+                   success: false,
+                   isRegistered: false,
+                   message: "Email verifikasi gagal terkirim"
+                 }).end();
+              } else {
+                res.json({
+                  success: true,
+                  isRegistered: false,
+                  message: "Email verifikasi berhasil terkirim"
+                }).end();
+              }
+            })
           }
         })
       } else {
-        respone.ok('Email sudah terdaftar', res)
+        res.json({
+          success: false,
+          isRegistered: true,
+          message: "Email anda telah terdaftar"
+        }).end();
       }
     }
   })
@@ -63,13 +123,18 @@ exports.login = function(req, res) {
     } else {
       if(rows.length == 1) {
         const token = jwt.sign({rows}, config.secret, {
-          expiresIn: 1440
+          expiresIn: '10000'
         })
        
         id = rows[0].id
-
         //1. tambahan row username
         username = rows[0].username
+        //2. tambahan row role
+        role = rows[0].role
+        
+        isVerified = rows[0].isVerified
+        //3. variable expired
+        const expired = 10000
 
         const data = {
           id_user: id,
@@ -91,8 +156,14 @@ exports.login = function(req, res) {
                message: 'Token JWS Tergenerate!',
                token: token,
                currUser: data.id_user,
+               //4. tambahan expired time
+               expires: expired,
                //2. tambahan user
-               user:username
+               user: username,
+               //3. tambah role
+               role: role,
+
+               isVerified: isVerified
              });
           }
         })
